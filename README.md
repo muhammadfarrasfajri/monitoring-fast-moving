@@ -49,8 +49,6 @@ Tests:  44 passed
 Time:   20.30s
 ```
 
-## Sponsor
- - SMM Panel Indonesia
 
 ## License
 
