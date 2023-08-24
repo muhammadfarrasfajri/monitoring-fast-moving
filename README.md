@@ -1,7 +1,6 @@
 # Intro
 Sistem inventaris berbasis website, bebas digunakan untuk kebutuhan apa saja
 
-![App Screenshot](https://github.com/superXdev/Sistem-Inventaris-Barang/raw/master/ss.png)
 
 ## Admin credentials
 **username:** admin
