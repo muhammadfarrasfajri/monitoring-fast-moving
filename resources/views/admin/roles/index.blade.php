@@ -38,7 +38,6 @@
 			</tbody>
 		</table>
 	</x-card>
-
 	<x-slot name="script">
 		<script>
 			$('.delete').click(function(e){

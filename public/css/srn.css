@@ -1,0 +1,101 @@
+.table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    /* Scrollbar tipis untuk Firefox */
+    scrollbar-color: #dedddd #ffffff;
+    /* Warna scrollbar dan latar belakang scrollbar */
+}
+
+/* Scrollbar horizontal untuk Webkit browser */
+.table-responsive::-webkit-scrollbar {
+    height: 8px;
+    /* Tinggi scrollbar horizontal */
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #ffffff;
+    /* Latar belakang scrollbar */
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #f3f2f2;
+    /* Warna scrollbar */
+    border-radius: 4px;
+    /* Membuat scrollbar lebih halus */
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+    /* Warna scrollbar saat hover */
+}
+
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 1;
+    text-align: center;
+}
+
+.search-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-container input {
+    padding-left: 2.5rem;
+}
+
+.search-container .fa-search {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+tbody tr {
+    transition: all 0.2s ease-in-out;
+}
+
+tbody tr.hide-row {
+    opacity: 0;
+    transform: translateX(-20px);
+    pointer-events: none;
+    height: 0;
+}
+
+.table-responsive .table th,
+.table-responsive .table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 10px;
+    padding: 10px;
+    /* Mengubah ukuran font menjadi lebih kecil */
+}
+
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.table-controls select,
+.table-controls button {
+    margin: 0;
+}
+
+.form-label {
+    font-weight: bold;
+    color: primary;
+}
+
+.form-select {
+    color: #ffffff;
+    background-color: #0091ff;
+    padding: 5px;
+}

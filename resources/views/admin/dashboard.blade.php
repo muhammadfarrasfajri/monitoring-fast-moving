@@ -1,246 +1,363 @@
 <x-app-layout>
     <x-slot name="title">
-        Dahsboard
+        Monitoring Material Fast Moving Sparepart & Pelumas
     </x-slot>
-
     <section class="row">
-        <x-card-sum 
-            text="Total Supplier" 
-            value="{{ $supplier }}" 
-            icon="users" 
-            color="warning"
-        />
-        <x-card-sum 
-            text="Total Barang" 
-            value="{{ $jumlah_barang }}" 
-            icon="box" 
-            color="primary"
-        />
-        <x-card-sum 
-            text="Jumlah Gudang" 
-            value="{{ $jumlah_gudang }}" 
-            icon="th" 
-            color="success"
-        />
-        <x-card-sum 
-            text="Keluar Masuk Barang" 
-            value="{{ $in_out }}" 
-            icon="chart-line" 
-            color="danger"
-        />
+        <x-card-sum size="4" text="TOTAL ITEM FAST MOVING" value="{{ $totalItem ?? 0 }}" icon="box"
+            color="info" />
+        <x-card-sum size="4" text="QOH TERISI" value="{{ $filledQoh ?? 0 }}" icon="box" color="success" />
+        <x-card-sum size="4" text="CUKUP PR" value="{{ $cukupPR ?? 0 }}" icon="box" color="warning" />
+        <x-card-sum size="4" text="CUKUP PO" value="{{ $cukupPO ?? 0 }}" icon="box" color="primary" />
+        <x-card-sum size="4" text="CUKUP PR & PO" value="{{ $cukupprpo ?? 0 }}" icon="box"
+            color="secondary" />
+        <x-card-sum size="4" text="CREATE PR" value="{{ $createPR ?? 0 }}" icon="box" color="danger" />
     </section>
-
     <section class="row">
-        {{-- log activity section --}}
-        <div class="col-md-6">
-            <x-card>
-                <x-slot name="title">
-                    Statistik Gudang
-                </x-slot>
-                
-                <div class="chart-pie pt-4">
-                    <canvas id="myBarChart"></canvas>
-                  </div>
-            </x-card>
-        </div>
-
-        {{-- chart section --}}
-        <div class="col-md-6">
+        <div class="col-md-4">
             <!-- Area Charts -->
-              <div class="card mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">Statistik Barang</h6>
+            <div class="card mb-4 shadow-sm">
+                <div
+                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-navbar text-white">
+                    <h6 class="m-0 font-weight-bold">PERSENTASE KETERSEDIAAN MATERIAL</h6>
                 </div>
                 <div class="card-body">
-                  <div class="chart-pie">
-                    <canvas id="myPieChart"></canvas>
-                  </div>
+                    <div class="chart-pie mb-4">
+                        <canvas id="qohChart"></canvas>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="font-weight-bold text-danger">Qoh Kosong</span>
+                            <span class="badge badge-danger badge-pill">{{ $emptyQoh }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="font-weight-bold text-primary">Qoh Terisi</span>
+                            <span class="badge badge-primary badge-pill">{{ $filledQoh }}</span>
+                        </li>
+                    </ul>
                 </div>
-              </div>
+            </div>
         </div>
-    </section>
-
-    <section class="row">
+        {{-- log activity section --}}
+        <div class="col-md-8">
+            <div class="card mb-4 shadow-sm">
+                <div
+                    class="card-header py-4 d-flex flex-row align-items-center justify-content-between bg-navbar text-white">
+                    <h6 class="m-0 font-weight-bold">MRP Contrl / Record Count</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-sm">
+                            <thead class="thead-Light">
+                                <tr>
+                                    <th>STATUS RUNNING MRP</th>
+                                    <th>P02</th>
+                                    <th>P03</th>
+                                    <th>P04</th>
+                                    <th>P05</th>
+                                    <th>P06</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>CUKUP PR</th>
+                                    <td>{{ $dataByMRP['P02']['cukup_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P03']['cukup_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P04']['cukup_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P05']['cukup_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P06']['cukup_pr'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>QOH ROP</th>
+                                    <td>{{ $dataByMRP['P02']['qoh_rop'] }}</td>
+                                    <td>{{ $dataByMRP['P03']['qoh_rop'] }}</td>
+                                    <td>{{ $dataByMRP['P04']['qoh_rop'] }}</td>
+                                    <td>{{ $dataByMRP['P05']['qoh_rop'] }}</td>
+                                    <td>{{ $dataByMRP['P06']['qoh_rop'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>CUKUP PR & PO</th>
+                                    <td>{{ $dataByMRP['P02']['cukup_pr_po'] }}</td>
+                                    <td>{{ $dataByMRP['P03']['cukup_pr_po'] }}</td>
+                                    <td>{{ $dataByMRP['P04']['cukup_pr_po'] }}</td>
+                                    <td>{{ $dataByMRP['P05']['cukup_pr_po'] }}</td>
+                                    <td>{{ $dataByMRP['P06']['cukup_pr_po'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>CREATE PR</th>
+                                    <td>{{ $dataByMRP['P02']['create_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P03']['create_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P04']['create_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P05']['create_pr'] }}</td>
+                                    <td>{{ $dataByMRP['P06']['create_pr'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>CUKUP PO</th>
+                                    <td>{{ $dataByMRP['P02']['cukup_po'] }}</td>
+                                    <td>{{ $dataByMRP['P03']['cukup_po'] }}</td>
+                                    <td>{{ $dataByMRP['P04']['cukup_po'] }}</td>
+                                    <td>{{ $dataByMRP['P05']['cukup_po'] }}</td>
+                                    <td>{{ $dataByMRP['P06']['cukup_po'] }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Total keseluruhan</th>
+                                    <td>{{ $totalTable['P02'] }}</td>
+                                    <td>{{ $totalTable['P03'] }}</td>
+                                    <td>{{ $totalTable['P04'] }}</td>
+                                    <td>{{ $totalTable['P05'] }}</td>
+                                    <td>{{ $totalTable['P06'] }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style>
+            .table th,
+            .table td {
+                font-size: 0.8rem;
+                padding: 1.45em;
+            }
+        </style>
         <div class="col-md-12">
+            <div>
+                <form action="{{ route('admin.dashboard') }}" method="GET">
+                    <label for="year">Pilih Tahun:</label>
+                    <select name="year" id="year" onchange="this.form.submit()">
+                        @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
+                            <option value="{{ $i }}" {{ $year == $i ? 'selected' : '' }}>
+                                {{ $i }}</option>
+                        @endfor
+                    </select>
+                </form>
+            </div>
             <x-card>
-                <x-slot name="title">Laporan terakhir</x-slot>
-
-                <table class="table table-hover mb-3">
-                    <thead>
-                        <th>Nama Barang</th>
-                        <th>Dari/Kepada</th>
-                        <th>Harga</th>
-                        <th>Stok</th>
-                        <th>Berat</th>
-                        <th>Tanggal</th>
-                        <th>Aksi</th>
-                    </thead>
-                    <tbody>
-                        @foreach ($data as $row)
-                            <tr>
-                                <td>{{ $row->nama }}</td>
-                                <td>{{ $row->orang }}</td>
-                                <td>{{ $row->harga }}</td>
-                                <td>{{ $row->jumlah }}</td>
-                                <td>{{ $row->berat }}kg</td>
-                                <td>{{ $row->created_at->format('d-m-Y') }}</td>
-                                <td><span class="badge badge-{{ ($row->jenis == 'Barang Masuk') ? 'success' : 'danger' }}">{{ $row->jenis }}</span></td>
-                            </tr>
-                        @endforeach
-                        
-                    </tbody>
-                </table>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card text-white text-center p-2 shadow-sm" style="background-color: #4BC0C0;">
+                            <h5 class="card-title mb-3 fs-6 fs-md-5 fs-lg-4">Total PR Terbit:</h5>
+                            <p class="card-text fs-6 fs-md-5 fs-lg-4">{{ $totalPRYear }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card text-white text-center p-2 shadow-sm" style="background-color: #9966FF;">
+                            <h5 class="card-title mb-3 fs-6 fs-md-5 fs-lg-4">Total PO Terbit:</h5>
+                            <p class="card-text fs-6 fs-md-5 fs-lg-4">{{ $totalPOYear }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <canvas id="prPoChart"></canvas>
+                </div>
             </x-card>
         </div>
-    </section>
+        <div class="col-md-12">
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-navbar text-white">
+                <h6 class="m-0 font-weight-bold">TREND KETERSEDIAAN KAT-A</h6>
+            </div>
+            <x-card>
+                <div class="card-body">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </x-card>
+        </div>
+        <style>
+            #trendChart {
+                width: 100%;
+                max-width: 900px;
+                /* Sesuaikan max-width sesuai kebutuhan */
+                max-height: 400px;
+                /* Sesuaikan height sesuai kebutuhan */
+            }
+        </style>
+        <x-slot name="script">
+            <script>
+                Chart.defaults.global.defaultFontFamily = 'Nunito',
+                    '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                Chart.defaults.global.defaultFontColor = '#858796';
 
-    <x-slot name="script">
-        <script>
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
-            
-            // Bar Chart Example
-            var ctx = document.getElementById("myBarChart");
-            var myBarChart = new Chart(ctx, {
-              type: 'bar',
-              data: {
-                labels: [
-                    @foreach ($gudangs as $gudang)
-                        '{{ $gudang->nama }}',
-                    @endforeach
-                ],
-                datasets: [{
-                  label: "Jumlah",
-                  backgroundColor: "#4e73df",
-                  hoverBackgroundColor: "#2e59d9",
-                  borderColor: "#4e73df",
-                  data: [
-                    @foreach ($gudangs as $gudang)
-                        '{{ $gudang->barangs->sum('jumlah') }}',
-                    @endforeach
-                  ],
-                }],
-              },
-              options: {
-                maintainAspectRatio: false,
-                layout: {
-                  padding: {
-                    left: 10,
-                    right: 25,
-                    top: 25,
-                    bottom: 0
-                  }
-                },
-                scales: {
-                  xAxes: [{
-                    time: {
-                      unit: 'month'
-                    },
-                    gridLines: {
-                      display: false,
-                      drawBorder: false
-                    },
-                    ticks: {
-                      maxTicksLimit: 6
-                    },
-                    maxBarThickness: 25,
-                  }],
-                  yAxes: [{
-                    ticks: {
-                      min: 0,
-                      max: {{ $jumlah_barang }},
-                      maxTicksLimit: 5,
-                      padding: 10,
-                      // Include a dollar sign in the ticks
-                      callback: function(value, index, values) {
-                        return value;
-                      }
-                    },
-                    gridLines: {
-                      color: "rgb(234, 236, 244)",
-                      zeroLineColor: "rgb(234, 236, 244)",
-                      drawBorder: false,
-                      borderDash: [2],
-                      zeroLineBorderDash: [2]
+                document.addEventListener("DOMContentLoaded", function() {
+                    var ctxQohChart = document.getElementById("qohChart");
+                    if (ctxQohChart) {
+                        ctxQohChart.style.width = '200px';
+                        ctxQohChart.style.height = '100px';
+                        new Chart(ctxQohChart, {
+                            type: 'pie',
+                            data: {
+                                labels: ['Filled QOH', 'Empty QOH'],
+                                datasets: [{
+                                    data: [{{ $filledPercentage ?? 0 }}, {{ $emptyPercentage ?? 0 }}],
+                                    backgroundColor: ['#0000ff', '#ff1a1a'],
+                                    hoverBorderColor: "rgba(200, 236, 244, 1)",
+                                }],
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                responsive: true,
+                                tooltips: {
+                                    backgroundColor: "rgb(255,255,255)",
+                                    bodyFontColor: "#858796",
+                                    borderColor: '#dddfeb',
+                                    borderWidth: 1,
+                                    xPadding: 15,
+                                    yPadding: 15,
+                                    displayColors: false,
+                                    caretPadding: 10,
+                                },
+                                legend: {
+                                    display: false
+                                }
+                            },
+                        });
                     }
-                  }],
-                },
-                legend: {
-                  display: false
-                },
-                tooltips: {
-                  titleMarginBottom: 10,
-                  titleFontColor: '#6e707e',
-                  titleFontSize: 14,
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                  callbacks: {
-                    label: function(tooltipItem, chart) {
-                      var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                      return datasetLabel + ': ' + tooltipItem.yLabel;
+                });
+                // Ambil data dari controller (PHP to JavaScript)
+                const months = @json(array_column($result, 'month'));
+                const totalPR = @json(array_column($result, 'totalPR'));
+                const totalPO = @json(array_column($result, 'totalPO'));
+
+                const ctx = document.getElementById('prPoChart').getContext('2d');
+
+                const prPoChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: months, // Label sumbu X (bulan)
+                        datasets: [{
+                                label: 'Total PR Terbit',
+                                data: totalPR, // Data total PR
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)', // Warna batang
+                                borderColor: 'rgba(75, 192, 192, 1)', // Warna garis batang
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Total PO Terbit',
+                                data: totalPO, // Data total PO
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                                borderColor: 'rgba(153, 102, 255, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true // Mulai dari 0 pada sumbu Y
+                            }
+                        }
                     }
-                  }
-                },
-              }
-            });
+                });
 
-            // Set new default font family and font color to mimic Bootstrap's default styling
-            Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
-            Chart.defaults.global.defaultFontColor = '#858796';
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Data untuk grafik
+                    const labels = @json($trends->pluck('Bulan'));
+                    const jumlahKatA = @json($trends->pluck('JUMLAH KAT-A'));
+                    const createPR = @json($trends->pluck('CREATE PR'));
+                    const qohTerisi = @json($trends->pluck('QOH TERISI'));
+                    const cukupPR = @json($trends->pluck('CUKUP PR'));
+                    const cukupPO = @json($trends->pluck('CUKUP PO'));
+                    const cukupPRPO = @json($trends->pluck('CUKUP PR & PO'));
+                    // Grafik Line Chart menggunakan Chart.js
+                    const ctx = document.getElementById('trendChart').getContext('2d');
+                    const trendChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                    label: 'JUMLAH KAT-A',
+                                    data: jumlahKatA,
+                                    borderColor: 'rgba(75, 192, 192, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'CREATE PR',
+                                    data: createPR,
+                                    borderColor: 'rgba(255, 159, 64, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'QOH TERISI',
+                                    data: qohTerisi,
+                                    borderColor: 'rgba(153, 102, 255, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'CUKUP PR',
+                                    data: cukupPR,
+                                    borderColor: 'rgba(54, 162, 235, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'CUKUP PO',
+                                    data: cukupPO,
+                                    borderColor: 'rgba(255, 99, 132, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                },
+                                {
+                                    label: 'CUKUP PR & PO',
+                                    data: cukupPRPO,
+                                    borderColor: 'rgba(255, 206, 86, 1)',
+                                    fill: false,
+                                    tension: 0.1
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true, // Agar bisa menyesuaikan tinggi dan lebar
+                            aspectRatio: 2, // Sesuaikan rasio aspek sesuai kebutuhan
+                            scales: {
+                                x: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Bulan'
+                                    }
+                                },
+                                y: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Jumlah'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                });
+                $('.add-csv').click(function() {
+                    $('#add-csv').modal('show')
+                })
+                $(document).ready(function() {
+                    $('table').DataTable();
+                });
+                // $('.delete-all').click(function(e) {
+                //     e.preventDefault();
 
-            // Pie Chart Example
-            var ctx = document.getElementById("myPieChart");
-            var myPieChart = new Chart(ctx, {
-              type: 'doughnut',
-              data: {
-                labels: [
-                    @foreach ($barangs as $barang)
-                        '{{ $barang->nama }}',
-                    @endforeach
-                ],
-                datasets: [{
-                  data: [
-                    @foreach ($barangs as $barang)
-                        {{ $barang->jumlah }},
-                    @endforeach
-                  ],
-                  backgroundColor: [
-                    @foreach ($barangs as $barang)
-                        @php
-                            $color = dechex(rand(0x000000, 0xFFFFFF));
-                        @endphp
-                        '{{ '#'.$color }}',
-                    @endforeach
-                  ],
-                  hoverBorderColor: "rgba(234, 236, 244, 1)",
-                }],
-              },
-              options: {
-                maintainAspectRatio: false,
-                tooltips: {
-                  backgroundColor: "rgb(255,255,255)",
-                  bodyFontColor: "#858796",
-                  borderColor: '#dddfeb',
-                  borderWidth: 1,
-                  xPadding: 15,
-                  yPadding: 15,
-                  displayColors: false,
-                  caretPadding: 10,
-                },
-                legend: {
-                  display: false
-                },
-                cutoutPercentage: 80,
-              },
-            });
-
-        </script>
-    </x-slot>
+                //     Swal.fire({
+                //         title: 'Ingin menghapus semua data?',
+                //         text: 'Data akan dihapus permanen',
+                //         icon: 'warning',
+                //         showCancelButton: true,
+                //         confirmButtonText: 'Hapus',
+                //         cancelButtonText: 'Batal'
+                //     }).then((result) => {
+                //         if (result.isConfirmed) {
+                //             // Kirim permintaan POST untuk menghapus semua data
+                //             $.post('{{ route('admin.trend.delete-all') }}', {
+                //                 _token: '{{ csrf_token() }}'
+                //             }).done(function() {
+                //                 // Segarkan halaman setelah penghapusan
+                //                 location.reload();
+                //             });
+                //         }
+                //     });
+                // });
+            </script>
+        </x-slot>
 </x-app-layout>
