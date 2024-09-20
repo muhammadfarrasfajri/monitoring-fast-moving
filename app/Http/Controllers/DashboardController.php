@@ -29,21 +29,42 @@ class DashboardController extends Controller
         $values = Sheets::collection($header, $prpo)->toArray();
         $statusrun = Sheets::spreadsheet('1XXvzQIo2uXpu0CfUZUgYpfaNcrVkz5ZDVocU5p6Hfho')->sheet('FAST MOVING')->get();
         $header = $statusrun->pull(0);
-        //trend
         $valuessr = Sheets::collection($header, $statusrun)->toArray();
+        //trend
+        // Ambil data dari Google Sheets
         $katA = Sheets::spreadsheet('1XXvzQIo2uXpu0CfUZUgYpfaNcrVkz5ZDVocU5p6Hfho')->sheet('Trend Kat-A')->get();
-        // Mengambil header (kolom) dan menghapusnya dari data
+
+        // Ambil header (kolom) dan hapus dari data
         $header = $katA->shift();
+
         // Memastikan setiap baris memiliki jumlah elemen yang sama dengan header
         $valuesA = [];
         foreach ($katA as $row) {
             if (count($header) == count($row)) {
-                $valuesA[] = array_combine($header, $row);
+                // Buat array dari header dan row
+                $rowData = array_combine($header, $row);
+
+                // Ekstrak tahun dari kolom 'Bulan'
+                $dateParts = explode(' ', $rowData['Bulan']); // Misalnya: ['1', 'Januari', '2024']
+                $rowData['Tahun'] = end($dateParts); // Mengambil tahun sebagai elemen terakhir
+
+                // Masukkan data ke dalam array
+                $valuesA[] = $rowData;
             }
         }
 
-        // Mengirim data ke view
+        // Konversi ke collection untuk memudahkan manipulasi
         $trends = collect($valuesA);
+
+        // Ambil semua tahun yang tersedia dari data untuk dropdown
+        $availableYears = $trends->pluck('Tahun')->unique();
+
+        // Filter data berdasarkan tahun (default tahun sekarang)
+        $selectedYear = request()->input('year', date('Y'));
+        $trendsByYear = $trends->where('Tahun', $selectedYear);
+
+        // Kirim data ke view
+
         //ENDtrend
 
         // Mengambil semua data dari Statusrunningmaterial
@@ -245,7 +266,9 @@ class DashboardController extends Controller
             'totalPRYear' => $totalPRYear,
             'totalPOYear' => $totalPOYear,
             'year' => $year,
-            'trends' => $trends
+            'trendsByYear' => $trendsByYear,
+            'selectedYear' => $selectedYear,
+            'availableYears' => $availableYears
         ]);
     }
     /**

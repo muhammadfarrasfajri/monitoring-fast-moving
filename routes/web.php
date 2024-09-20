@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
 	DashboardController,
-	LaporanController,
 	StatusrunningmaterialController,
 	PrpooutstandingController,
 	KontrakController,
@@ -44,7 +43,7 @@ Route::group([
 	//Statusrunningmaterial
 	Route::get('/status-running-material', [StatusrunningmaterialController::class, 'index'])->name('status-running-material.index');
 	Route::get('status-running-material/download-excel', [StatusrunningmaterialController::class, 'downloadExcel'])->name('download.excel');
-	Route::get('/status-running-material/data', [StatusrunningmaterialController::class, 'getData'])->name('status-running-material.data');
+	Route::get('status-running-material/data', [StatusRunningMaterialController::class, 'getData'])->name('status-running-material.data');
 	Route::get('/status-running-material/qoh-percentage', [StatusRunningMaterialController::class, 'calculateQOHPercentage'])->name('status-running-material.qoh-percentage');
 	Route::post('/status-running-material/send-email', [StatusrunningmaterialController::class, 'store'])->name('status-running-material.send-email');
 
@@ -63,8 +62,6 @@ Route::group([
 
 
 
-	// laporan
-	Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
 });
 
 

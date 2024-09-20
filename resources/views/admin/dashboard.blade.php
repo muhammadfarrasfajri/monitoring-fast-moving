@@ -120,17 +120,6 @@
             }
         </style>
         <div class="col-md-12">
-            <div>
-                <form action="{{ route('admin.dashboard') }}" method="GET">
-                    <label for="year">Pilih Tahun:</label>
-                    <select name="year" id="year" onchange="this.form.submit()">
-                        @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
-                            <option value="{{ $i }}" {{ $year == $i ? 'selected' : '' }}>
-                                {{ $i }}</option>
-                        @endfor
-                    </select>
-                </form>
-            </div>
             <x-card>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -147,6 +136,15 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <form action="{{ route('admin.dashboard') }}" method="GET">
+                        <label for="year">Pilih Tahun:</label>
+                        <select name="year" id="year" onchange="this.form.submit()">
+                            @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
+                                <option value="{{ $i }}" {{ $year == $i ? 'selected' : '' }}>
+                                    {{ $i }}</option>
+                            @endfor
+                        </select>
+                    </form>
                     <canvas id="prPoChart"></canvas>
                 </div>
             </x-card>
@@ -158,6 +156,16 @@
             </div>
             <x-card>
                 <div class="card-body">
+                    <form method="GET" action="">
+                        <label for="yearFilter">Pilih Tahun:</label>
+                        <select id="yearFilter" name="year" onchange="this.form.submit()">
+                            @foreach ($availableYears as $year)
+                                <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
                     <canvas id="trendChart"></canvas>
                 </div>
             </x-card>
@@ -249,15 +257,15 @@
                 });
 
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Data untuk grafik
-                    const labels = @json($trends->pluck('Bulan'));
-                    const jumlahKatA = @json($trends->pluck('JUMLAH KAT-A'));
-                    const createPR = @json($trends->pluck('CREATE PR'));
-                    const qohTerisi = @json($trends->pluck('QOH TERISI'));
-                    const cukupPR = @json($trends->pluck('CUKUP PR'));
-                    const cukupPO = @json($trends->pluck('CUKUP PO'));
-                    const cukupPRPO = @json($trends->pluck('CUKUP PR & PO'));
-                    // Grafik Line Chart menggunakan Chart.js
+                    const labels = @json($trendsByYear->pluck('Bulan'));
+                    const jumlahKatA = @json($trendsByYear->pluck('JUMLAH KAT-A'));
+                    const qohTerisi = @json($trendsByYear->pluck('QOH TERISI'));
+                    const cukupPR = @json($trendsByYear->pluck('CUKUP PR'));
+                    const cukupPO = @json($trendsByYear->pluck('CUKUP PO'));
+                    const cukupPRPO = @json($trendsByYear->pluck('CUKUP PR & PO'));
+                    const createPR = @json($trendsByYear->pluck('CREATE PR'));
+
+                    // Inisialisasi chart seperti biasa
                     const ctx = document.getElementById('trendChart').getContext('2d');
                     const trendChart = new Chart(ctx, {
                         type: 'line',
@@ -309,8 +317,8 @@
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: true, // Agar bisa menyesuaikan tinggi dan lebar
-                            aspectRatio: 2, // Sesuaikan rasio aspek sesuai kebutuhan
+                            maintainAspectRatio: true,
+                            aspectRatio: 2,
                             scales: {
                                 x: {
                                     display: true,
@@ -330,34 +338,13 @@
                         }
                     });
                 });
+
                 $('.add-csv').click(function() {
                     $('#add-csv').modal('show')
                 })
                 $(document).ready(function() {
                     $('table').DataTable();
                 });
-                // $('.delete-all').click(function(e) {
-                //     e.preventDefault();
-
-                //     Swal.fire({
-                //         title: 'Ingin menghapus semua data?',
-                //         text: 'Data akan dihapus permanen',
-                //         icon: 'warning',
-                //         showCancelButton: true,
-                //         confirmButtonText: 'Hapus',
-                //         cancelButtonText: 'Batal'
-                //     }).then((result) => {
-                //         if (result.isConfirmed) {
-                //             // Kirim permintaan POST untuk menghapus semua data
-                //             $.post('{{ route('admin.trend.delete-all') }}', {
-                //                 _token: '{{ csrf_token() }}'
-                //             }).done(function() {
-                //                 // Segarkan halaman setelah penghapusan
-                //                 location.reload();
-                //             });
-                //         }
-                //     });
-                // });
             </script>
         </x-slot>
 </x-app-layout>

@@ -70,10 +70,9 @@
             <footer class="sticky-footer bg-white mt-3">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>copyright&copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script>
+                        <span>copyright&copy;Teknik Komputer Polsri 2024. Template licensed under the MIT License by
+                            [ryted].
+                            All rights reserved.
                         </span>
                     </div>
                 </div>

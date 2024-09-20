@@ -5,38 +5,47 @@
     @endif
     <x-card>
         <x-slot name="title">Semua Data</x-slot>
-        <div class="container mt-5">
-            <h2>Send Email</h2>
+        @role('Admin')
+            <div class="container mt-5">
+                <h2>Send Email</h2>
 
-            <!-- Display Success or Error Message -->
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
+                <!-- Display Success or Error Message -->
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
 
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
+                @if (session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-            <!-- Form to Send Email -->
-            <form action="{{ route('admin.status-running-material.send-email') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label for="email">Recipient Emails (separated by commas):</label>
-                    <input type="text" class="form-control" id="email" name="emails" placeholder="email"
-                        required>
+                <!-- Form to Send Email -->
+                <form action="{{ route('admin.status-running-material.send-email') }}" method="POST">
+                    @csrf
+                    <div class="form-group">
+                        <label for="email">Recipient Emails (separated by commas):</label>
+                        <input type="text" class="form-control" id="email" name="emails" placeholder="email"
+                            required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Approve</button>
+                    <button type="submit" class="btn btn-primary">Send Email</button>
+                </form>
+            </div>
+        @endrole
+        <div class="search-container row g-1 align-items-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="input-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="tableSearch" placeholder="Search..." class="form-control-5">
                 </div>
-                <button type="submit" class="btn btn-success">Approve</button>
-                <button type="submit" class="btn btn-primary">Send Email</button>
-            </form>
-        </div>
-        <div class="search-container d-flex flex-wrap align-items-end justify-content-between">
-            <div class="col-12 col-md-6 col-lg-2 mb-3">
+            </div>
+            <div class="col-12 col-md-6 col-lg-2">
                 <label for="mrpControlFilter" class="form-label">MRP Control:</label>
-                <select id="mrpControlFilter" class="form-select form-select-lg" aria-label=".form-select-lg example">
+                <select id="mrpControlFilter" class="form-select form-select-lg mb-3"
+                    aria-label=".form-select-lg example">
                     <option value="">All</option>
                     <option value="P03">P03</option>
                     <option value="P02">P02</option>
@@ -45,9 +54,9 @@
                     <option value="P05">P05</option>
                 </select>
             </div>
-            <div class="col-12 col-md-6 col-lg-2 mb-3">
+            <div class="col-12 col-md-6 col-lg-6">
                 <label for="statusRunningMrpFilter" class="form-label">Status Running MRP:</label>
-                <select id="statusRunningMrpFilter" class="form-select form-select-lg"
+                <select id="statusRunningMrpFilter" class="form-select form-select-lg mb-3"
                     aria-label=".form-select-lg example">
                     <option value="">All</option>
                     <option value="CUKUP PO">CUKUP PO</option>
@@ -57,13 +66,9 @@
                     <option value="CUKUP PR & PO">CUKUP PR & PO</option>
                 </select>
             </div>
-            <!-- Tombol Filter di sini -->
-            <div class="col-12 col-md-6 col-lg-8 d-flex justify-content-end align-items-end mb-3">
-                <button class="btn btn-primary">Filter</button>
-            </div>
         </div>
         <div class="table-responsive">
-            <table class="table table-bordered" id="myTable">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th scope="col">No</th>
@@ -100,11 +105,27 @@
                 </tbody>
             </table>
         </div>
-        <a href="{{ route('admin.download.excel') }}" class="btn btn-primary">Download Excel</a>
+        <div>
+            <a href="{{ route('admin.download.excel') }}" class="btn btn-primary mt-3 mb-3">Download Excel</a>
+        </div>
     </x-card>
     <link rel="stylesheet" href="{{ asset('css/srn.css') }}">
     <script>
         // Fungsi Pencarian
+        document.getElementById('tableSearch').addEventListener('keyup', function() {
+            var searchValue = this.value.toLowerCase();
+            var tableRows = document.querySelectorAll('#tableBody tr');
+
+            tableRows.forEach(function(row) {
+                var rowText = row.textContent.toLowerCase();
+                if (rowText.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
         function filterTable() {
             var mrpControlValue = document.getElementById('mrpControlFilter').value;
             var statusRunningMrpValue = document.getElementById('statusRunningMrpFilter').value;
@@ -131,12 +152,11 @@
         document.getElementById('statusRunningMrpFilter').addEventListener('change', filterTable);
     </script>
     <x-slot name="script">
-        <link
-            href="https://cdn.datatables.net/v/dt/dt-2.1.6/af-2.7.0/b-3.1.2/date-1.5.4/fh-4.0.1/r-3.0.3/sc-2.4.3/sl-2.1.0/datatables.min.css"
-            rel="stylesheet">
-        <script
-            src="https://cdn.datatables.net/v/dt/dt-2.1.6/af-2.7.0/b-3.1.2/date-1.5.4/fh-4.0.1/r-3.0.3/sc-2.4.3/sl-2.1.0/datatables.min.js">
-        </script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="{{ asset('dist/vendor/datatables/dataTables.bootstrap4.min.js') }}"></script>
         <script>
             $(document).ready(function() {
                 $('table').DataTable();
