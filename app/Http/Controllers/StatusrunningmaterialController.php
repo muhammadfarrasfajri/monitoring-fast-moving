@@ -84,7 +84,7 @@ class StatusrunningmaterialController extends Controller
             // Isi email
             $mail->isHTML(true);
             $mail->Subject = 'Data Baru Saja Di Update';
-            $mail->Body = 'Sehubungan dengan pemenuhan kebutuhan material fast moving sparepart & lube oil yang harus terjaga ketersediaannya, bersama email ini telah dilakukan running MRP rutin dan kami lampirkan daftar material untuk dilakukan penerbitan PR.<br>
+            $mail->Body = 'Kepaada : AVP Perenc Pengadaan Barang & Jasa beserta Staff<br><br>Sehubungan dengan pemenuhan kebutuhan material fast moving sparepart & lube oil yang harus terjaga ketersediaannya, bersama email ini telah dilakukan running MRP rutin dan kami lampirkan daftar material untuk dilakukan penerbitan PR.<br>
 Untuk penerbitan PR harap mempertimbangkan :<br>
 1. Quantity of Requirement (QOR) tetap mangacu pada nilai Max atau ROP < QOR < MAX dan tetap memperhatikan status pada tcode MD04.<br>
 2. Item yang memiliki masa atau waktu penyimpanan dan jika disimpan terlalu lama dapat menyebabkan kerusakan atau penurunan kualitas harap dapat memperhatikan histori pemakaian.<br>
