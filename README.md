@@ -16,13 +16,10 @@ Sistem inventaris berbasis website, bebas digunakan untuk kebutuhan apa saja
 ## Menu
 
 - Dashboard
-- Daftar petugas (admin, staff gudang/barang)
-- Daftar barang
-- Daftar gudang
-- Daftar supplier
-- Barang masuk
-- Barang keluar
-- Laporan
+- Status Running Material
+- PR-PO Outstanding
+- Kontrak
+- Petugas
 - Profile (ganti pp & password)
   
 ## Installation 
